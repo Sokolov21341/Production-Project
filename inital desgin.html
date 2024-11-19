@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exploits Editor</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div id="exploits"></div>
+        <div id="xml"></div>
+        <div id="settings">
+            <h3>Settings</h3>
+            <button id="downloadButton">Download</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lalitbhagtani-web-xml-editor@latest/xml-editor.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
+
+<style>
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+#exploits, #xml, #settings {
+    flex: 1;
+    padding: 20px;
+    border: 1px solid #ccc;
+}
+
+#xml {
+    /* We'll add specific styling for the XML editor later */
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const exploitsContainer = document.getElementById('exploits');
+    
+    // Create some initial items
+    for (let i = 1; i <= 5; i++) {
+        const item = document.createElement('div');
+        item.className = 'item';
+        item.textContent = `Exploit ${i}`;
+        exploitsContainer.appendChild(item);
+    }
+
+    // Initialize SortableJS
+    Sortable.create(exploitsContainer, {
+        group: 'exploits',
+        animation: 150,
+        ghostClass: 'sortable-ghost',
+        chosenClass: 'sortable-chosen',
+        dragClass: 'sortable-drag'
+    });
+
+    const xmlContainer = document.getElementById('xml');
+
+    // Initialize XML editor
+    new XmlEditor(xmlContainer);
+
+    const downloadButton = document.getElementById('downloadButton');
+
+    // Simulate downloading functionality
+    downloadButton.addEventListener('click', () => {
+        alert('Downloading...');
+    });
+});
+</script>

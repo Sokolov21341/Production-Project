@@ -1016,3 +1016,46 @@ function setFormattedXMLText(){
     xmlText.value = vkbeautify.xml(xmlDoc.firstChild.outerHTML,indentation);
 }
 
+// Existing code in js-xml-editor.js...
+
+// Add this new code at the end of the file or in an appropriate section
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize Exploits List
+    const exploitsList = document.getElementById('exploits-list');
+    
+    // Add some initial items to the list
+    const items = ['SQL Injection', 'Cross-Site Scripting (XSS)', 'Buffer Overflow', 'Command Injection', 'LDAP Injection'];
+    items.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        exploitsList.appendChild(li);
+    });
+
+    // Initialize SortableJS for Exploits List
+    Sortable.create(exploitsList, {
+        group: 'exploits',
+        animation: 150,
+        ghostClass: 'sortable-ghost',
+        chosenClass: 'sortable-chosen',
+        dragClass: 'sortable-drag',
+        delay: 100,
+        onEnd: function (/**Event*/evt) {
+            console.log('Item moved:', evt.item, 'to:', evt.to);
+        },
+        onUpdate: function (/**Event*/evt) {
+            console.log('Item updated:', evt.item, 'moved to:', evt.newIndex);
+        }
+    });
+
+    // Function to add items dynamically (you can call this function when needed)
+    function addItemToExploitsList(text) {
+        const li = document.createElement('li');
+        li.textContent = text;
+        exploitsList.appendChild(li);
+    }
+
+    // Example usage: Add a new exploit
+    // addItemToExploitsList('New Exploit Added');
+});
+
+
