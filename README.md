@@ -1,5 +1,7 @@
 **Production Project: Customer Scenario Generator for SecGen**
 
+The project aims to create a website or software application that allows users to create custom scenarios for SecGen which creates vulnerable VM environments for cybersecurity training and testing. The project helps with security preparedness and flexibility due to the ability to customise VMs.
+
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 **6 Sprints**
 
