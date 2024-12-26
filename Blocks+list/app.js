@@ -1,6 +1,8 @@
 
 var	ExploitList = document.getElementById('ExploitList'), 
 XML_Classes = document.getElementById('XML_Classes'),
+Privlage_Escalation = document.getElementById("Privlage Escalation"),
+Generator = document.getElementById("Generator"),
 RemoveBox = document.getElementById('RemoveBox');
 
 var list;
@@ -9,24 +11,28 @@ list = new Array();
 
 function Clear()
 {
-	document.getElementById('xml-text').value = "";
+	document.getElementById('xml-text').value = '';
 	
 }
 
-function New()
+function Load()
 {
+
+}
+
+function New()
+{	
 	Clear()
 
-	 var Max = list.length;
+	var Max = list.length;
 	while (Max > 0) 
 	{
-		console.log(list[Max].value);
 		list.pop();
 		
 	}
-	 
-	document.getElementById(XML_Classes).innerHTML = ""; 
-
+	
+	XML_Classes.innerHTML = '<h1>XML_Classes</h1>';
+	
 }
 
 function newItem(text)
@@ -57,12 +63,34 @@ new Sortable(ExploitList, {
 	sort: false
 });
 
+new Sortable(Privlage_Escalation, {
+	group: {
+		filter: '.Header',
+		name: 'shared',
+		pull: 'clone', // To clone: set pull to 'clone'
+		put: false,
+	},
+	animation: 150,
+	sort: false
+});
+
+new Sortable(Generator, {
+	group: {
+		filter: '.Header',
+		name: 'shared',
+		pull: 'clone', // To clone: set pull to 'clone'
+		put: false,
+	},
+	animation: 150,
+	sort: false
+});
+
 // This is Class diagram 
 new Sortable(XML_Classes, {
 	group: {
 		filter: '.Header',
 		name: 'shared',
-		sort: true
+		sort: false
 	},
 	animation: 150
 });
