@@ -5,9 +5,9 @@ Privlage_Escalation = document.getElementById("Privlage Escalation"),
 Generator = document.getElementById("Generator"),
 RemoveBox = document.getElementById('RemoveBox');
 
-var list;
+var list = [];
 
-list = new Array();
+
 
 function Clear()
 {
@@ -17,17 +17,19 @@ function Clear()
 
 function Load()
 {
-
+	
+	
 }
 
 function New()
 {	
 	Clear()
 
-	var Max = list.length;
-	while (Max > 0) 
+	
+	while (list.length > 0) 
 	{
 		list.pop();
+		alert(list);
 		
 	}
 	
@@ -39,7 +41,8 @@ function newItem(text)
 {
 	
 		document.getElementById('xml-text').value += "\n<" + text + ">\n\n<" + text + ">";
-		list.add(text);
+		list.push(text);
+		alert(list);
 	
 
 }
@@ -48,7 +51,7 @@ function addingToItem(text)
 {
 	
 		document.getElementById('xml-text').value += "<" + text + ">"  +"<" + text + ">";
-		list.add(text);
+		list.push(text);
 }
 	
 // This is the exploit list it cannot be added to and the sorting wont change
@@ -86,13 +89,20 @@ new Sortable(Generator, {
 });
 
 // This is Class diagram 
-new Sortable(XML_Classes, {
+Sortable.create(XML_Classes, {
+	
 	group: {
 		filter: '.Header',
 		name: 'shared',
-		sort: false
+
 	},
-	animation: 150
+	animation: 150,
+	sort: false,
+	onAdd: function (evt) {
+		var el = evt.item;
+		newItem(el.textContent);
+	}
+	
 });
 
 Sortable.create(RemoveBox, {
