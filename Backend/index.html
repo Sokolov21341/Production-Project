@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<head>
+
+	<title>Backend Testing</title>
+	<style>
+		.list-group-item {border: 1px solid black }	
+	</style>
+	<style>
+		.container {
+			max-width: 800px;
+			margin: 20px auto;
+			font-family: Arial, sans-serif;
+		}
+		.editor {
+			width: 100%;
+			height: 300px;
+			font-family: monospace;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			resize: vertical;
+		}
+		.validation-result {
+			margin-top: 10px;
+			padding: 10px;
+			border-radius: 4px;
+		}
+		.error {
+			background-color: #ffebee;
+			color: #c62828;
+			border-left: 4px solid #c62828;
+		}
+		.valid {
+			background-color: #e8f5e9;
+			color: #2e7d32;
+			border-left: 4px solid #2e7d32;
+		}
+	</style>
+	
+</head>
+<body>
+
+	<div id="ExploitList" class="list-group col" style="float: left;width: 300px;border: 3px solid #e6f600;padding: 10px;">
+		<h1 class="Header">ExploitList</h1>
+		<div class="list-group-item">IRC</div>
+		<div class="list-group-item">DISTCCD 2</div>
+		<div class="list-group-item">FTP</div>
+		<div class="list-group-item">HTTP</div>
+		<div class="list-group-item">SUDO</div>
+		<div class="list-group-item">AWK</div>
+	</div>
+
+	<div id="Generator" class="list-group col" style="float: left;width: 300px;border: 3px solid #f6006f;padding: 10px;">
+		<h1 class="Header">Generator</h1>
+		<div class="list-group-item">TEST</div>
+	</div>
+
+	<div id="Privlage Escalation" class="list-group col" style="float: left;width: 300px;border: 3px solid #0bd2e9;padding: 10px;">
+		<h1 class="Header">Privlage</h1>
+		<div class="list-group-item">VIM</div>
+	</div>
+
+	<div id="XML_Classes" class="list-group col" style="float: right;width: 300px;border: 3px solid #06e911;padding: 10px;">
+		<h1 class="Header">XML_Classes</h1>
+		
+	</div>
+
+	<div id="RemoveBox" class="list-group col" style="float: right ;top: 25%; left:25%; width: 300px;border: 3px solid #d60c0c;padding: 10px;">
+		<h1 class="Header">RemoveBox</h1>
+	</div>
+
+	<div class="container">
+		<textarea id="xmlEditor" class="editor"></textarea>
+		<div id="validationResult" class="validation-result"></div>
+	</div>
+
+	<div id="app-container"></div>
+
+	<div id="Buttons">
+		<button onclick="Clear()">Clear</button>
+		<button onclick="Load()">Load</button>
+		<button onclick="New()">New</button>
+	</div>
+
+	<script src="./Sortable.js"></script>
+	<script src="XMLValidator.js"></script>
+	<script src="app.js"></script>
+
+</body>		
+</html>
