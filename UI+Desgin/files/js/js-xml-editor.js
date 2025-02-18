@@ -219,7 +219,7 @@ function saveToDisk() {
     var element = document.createElement('a');
     element.setAttribute('href', 'data:application/xml;charset=utf-8,'
         + encodeURIComponent(document.getElementById('xml-text').value));
-    element.setAttribute('download', 'XMLFile.xml');
+    element.setAttribute('download', document.getElementById("name-of-file").value + ".xml");
     element.style.display = 'none';
     document.body.appendChild(element);
     element.click();
@@ -1031,7 +1031,7 @@ function initSortablePropertyBox() {
         group: {
             filter: '.Header',
             name: 'shared',
-            pull: 'clone', // To clone: set pull to 'clone'
+            pull: 'clone',
             put: false,
         },
         animation: 150,
@@ -1042,32 +1042,13 @@ function initSortablePropertyBox() {
         group: {
             filter: '.Header',
             name: 'shared',
-            pull: 'clone', // To clone: set pull to 'clone'
+            pull: 'clone', 
             put: false,
         },
         animation: 150,
         sort: false
     });
-    
-    // This is Class diagram
-/*      
-    Sortable.create(XML_Classes, {
-        
-        group: {
-            filter: '.Header',
-            name: 'shared',
-    
-        },
-        animation: 150,
-        sort: false,
-        onAdd: function (evt) {
-            var el = evt.item;
-            newItem(el.textContent);
-        }
-        
-    });
-*/    
-    
+
     Sortable.create(RemoveBox, {
         group: "shared",
         
