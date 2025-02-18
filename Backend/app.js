@@ -40,9 +40,10 @@ function New()
 function newItem(text)
 {
 	
-		document.getElementById('xmlEditor').value += "\n<" + text + ">\n\n<" + text + ">";
+		document.getElementById('xmlEditor').value += "\n<" + text + ">\n\n<" + "/" + text + ">";
 		list.push(text);
 		alert(list);
+		
 	
 
 }
@@ -50,7 +51,7 @@ function newItem(text)
 function addingToItem(text)
 {
 	
-		document.getElementById('xmlEditor').value += "<" + text + ">"  +"<" + text + ">";
+		document.getElementById('xmlEditor').value += "<" + text + ">"  +"<" + "/" + text + ">";
 		list.push(text);
 }
 	
@@ -100,6 +101,7 @@ Sortable.create(XML_Classes, {
 	onAdd: function (evt) {
 		var el = evt.item;
 		newItem(el.textContent);
+		
 	}
 	
 });
@@ -113,14 +115,7 @@ Sortable.create(RemoveBox, {
 	}
   });
 
-for (var i = 0; i < nestedSortables.length; i++) {
-	new Sortable(nestedSortables[i], {
-		group: 'nested',
-		animation: 150,
-		fallbackOnBody: true,
-		swapThreshold: 0.65
-	});
-}  
+
 
 
   

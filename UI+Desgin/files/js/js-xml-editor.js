@@ -1,21 +1,3 @@
-
-
-import Sortable from 'sortablejs';
-
-// Core SortableJS (without default plugins)
-import Sortable from 'sortablejs/modular/sortable.core.esm.js';
-
-// Complete SortableJS (with all plugins)
-import Sortable from 'sortablejs/modular/sortable.complete.esm.js';
-
-
-var el = document.getElementById('exploit-list');
-var sortable = Sortable.create(el);
-new Sortable(sortable, {
-    animation: 150,
-    ghostClass: 'blue-background-class'
-});
-
 var deleteImageAlt = 'Delete';
 var deleteImagePath = 'files/images/delete.png';
 var collapseImagePath = 'files/images/collapse.png';
@@ -281,10 +263,6 @@ function getParameterByName(name, url) {
     if (!results) return null;
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, " "));
-}
-
-function saveToCloud(){
-    alert(CloudConnectionProblemMessage);
 }
 
 function loadXML(){
@@ -1033,11 +1011,163 @@ function setFormattedXMLText(){
     var xmlText = document.getElementById('xml-text');
     xmlText.value = vkbeautify.xml(xmlDoc.firstChild.outerHTML,indentation);
 }
+// New code added here
 
 
+// Initialize Sortable
+function initSortablePropertyBox() {
+    new Sortable(ExploitList, {
+        group: {
+            filter: '.Header',
+            name: 'shared',
+            pull: 'clone', // To clone: set pull to 'clone'
+            put: false,
+        },
+        animation: 150,
+        sort: false
+    });
+    
+    new Sortable(VM, {
+        group: {
+            filter: '.Header',
+            name: 'shared',
+            pull: 'clone', // To clone: set pull to 'clone'
+            put: false,
+        },
+        animation: 150,
+        sort: false
+    });
+    
+    new Sortable(Generator, {
+        group: {
+            filter: '.Header',
+            name: 'shared',
+            pull: 'clone', // To clone: set pull to 'clone'
+            put: false,
+        },
+        animation: 150,
+        sort: false
+    });
+    
+    // This is Class diagram
+/*      
+    Sortable.create(XML_Classes, {
+        
+        group: {
+            filter: '.Header',
+            name: 'shared',
+    
+        },
+        animation: 150,
+        sort: false,
+        onAdd: function (evt) {
+            var el = evt.item;
+            newItem(el.textContent);
+        }
+        
+    });
+*/    
+    
+    Sortable.create(RemoveBox, {
+        group: "shared",
+        
+        onAdd: function (evt) {
+          var el = evt.item;
+          el.parentNode.removeChild(el);
+        }
+      });
+}
+// Update property box when items are moved
+function updatePropertyBox(item) {
+    const sectionId = item.parentElement.id;
+    const xmlObject = jQuery.data(document.getElementById(treeViewSelectId), attachedXMLToolObjectKey);
+    
+    if (xmlObject) {
+        if (sectionId === 'element-box') {
+            setElementBoxInitialValues('element-name-mandatory-text', xmlObject, 'element-name', 'attribute-mandatory-text');
+        } else {
+            setTextBoxInitialValues('element-value', xmlObject, 'value-radio-pcdata', 'value-radio-cdata');
+        }
+    }
+}
 
+// Modify existing setAndShowPropertyBox function
+function setAndShowPropertyBox(treeView) {
+    const propertyBox = document.getElementById('property-box');
+    while (propertyBox.firstChild) {
+        propertyBox.removeChild(propertyBox.firstChild);
+    }
 
+    const xmlObject = jQuery.data(treeView, attachedXMLToolObjectKey);
+    const xmlElement = jQuery.data(treeView, attachedXMLObjectKey);
 
+    if (xmlObject && xmlElement) {
+        if (xmlObject.valueType === elementType) {
+            propertyBox.appendChild(createElementBox(xmlObject, xmlElement));
+        } else {
+            propertyBox.appendChild(createTextBox(xmlObject, xmlElement));
+        }
+        
+        // Re-initialize Sortable after content update
+        initSortablePropertyBox();
+    }
+}
 
+// Create element box content
+function createElementBox(xmlObject, xmlElement) {
+    const elementBox = document.createElement('div');
+    elementBox.id = 'element-box';
+    elementBox.className = 'property-section';
+    
+    const content = document.createElement('div');
+    content.className = 'property-content';
+    
+    // Name property
+    const nameItem = document.createElement('div');
+    nameItem.className = 'property-item';
+    nameItem.innerHTML = `
+        <label>Name:</label>
+        <input type="text" id="element-name" value="${xmlObject.name}" />
+    `;
+    
+    // Attributes property
+    const attributesItem = document.createElement('div');
+    attributesItem.className = 'property-item';
+    attributesItem.innerHTML = `
+        <label>Attributes:</label>
+        <div id="attribute-list"></div>
+    `;
+    
+    content.appendChild(nameItem);
+    content.appendChild(attributesItem);
+    elementBox.appendChild(content);
+    
+    return elementBox;
+}
 
-
+// Create text box content
+function createTextBox(xmlObject, xmlElement) {
+    const textBox = document.createElement('div');
+    textBox.id = 'text-box';
+    textBox.className = 'property-section';
+    
+    const content = document.createElement('div');
+    content.className = 'property-content';
+    
+    content.innerHTML = `
+        <div class="property-item">
+            <label>Value:</label>
+            <textarea id="element-value">${xmlObject.value}</textarea>
+        </div>
+        <div class="property-item">
+            <label>Type:</label>
+            <select id="value-type">
+                <option value="text" ${xmlObject.valueType === textType ? 'selected' : ''}>Text</option>
+                <option value="cdata" ${xmlObject.valueType === cdataType ? 'selected' : ''}>CDATA</option>
+            </select>
+        </div>
+    `;
+    
+    textBox.appendChild(content);
+    return textBox;
+}

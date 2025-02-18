@@ -12,18 +12,30 @@ class XMLValidator {
             intermediate: { name: 'Intermediate', description: 'Well-formed XML with proper nesting' },
             advanced: { name: 'Advanced', description: 'Complex XML structure with proper formatting' }
         };
-         
+        
+        
         this.setupEventListeners();
     }
 
+    
+
     setupEventListeners() {
         const editor = document.getElementById('xmlEditor');
+        const refreshButton = document.getElementById('refreshButton');
+
+        // Real-time validation
         editor.addEventListener('input', () => {
             this.xmlContent = editor.value;
             this.validateAndUpdate();
         });
 
+        // Manual refresh button
+        refreshButton.addEventListener('click', () => {
+            this.refreshValidation();
+        });
+
         // Set initial content
+        editor.value = this.getDefaultXML();
         this.validateAndUpdate();
     }
 
@@ -68,6 +80,12 @@ class XMLValidator {
         if (elementCount >= 1 && maxDepth >= 1) return 'basic';
         
         return 'invalid';
+    }
+
+    refreshValidation() {
+        const editor = document.getElementById('xmlEditor');
+        this.xmlContent = editor.value;
+        this.validateAndUpdate();
     }
 
     updateUI() {
