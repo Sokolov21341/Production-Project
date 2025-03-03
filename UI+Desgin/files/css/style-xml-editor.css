@@ -511,11 +511,11 @@ a:visited {
 
 .Header {
     background: #555;
+    color: #B4B4B4;
+    font-family: verdana;
     
 }
 .list-group-item {
     background: #f0f0f0;
     border: 1px solid black; 
 }
-
-

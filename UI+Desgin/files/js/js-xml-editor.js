@@ -1,11 +1,13 @@
 var deleteImageAlt = 'Delete';
-var deleteImagePath = 'files/images/delete.png';
-var collapseImagePath = 'files/images/collapse.png';
-var expandImagePath = 'files/images/expand.png';
-var copyImagePath = 'files/images/copy.png';
-var copySelectImagePath = 'files/images/copy-select.png';
+var deleteImagePath = 'UI+Desgin/files/images/delete.png';
+var collapseImagePath = 'UI+Desgin/files/images/collapse.png';
+var expandImagePath = 'UI+Desgin/files/images/expand.png';
+var copyImagePath = 'UI+Desgin/files/images/copy.png';
+var copySelectImagePath = 'UI+Desgin/images/copy-select.png';
 var indentation = 5;
 var counter = 0;
+var add_element_by_block = document.getElementById("add-element-by-block")
+
 
 var rootElementId = 'rootElement-div';
 var rootElementName = 'Root';
@@ -800,6 +802,7 @@ function addElementNode(type){
                 xmlElement = new XMLElement('','','','',textType,'New Text Node');
                 data = createElementDiv(xmlElement);
             }
+           
             if(xmlElement !== null && data !== null){
                 document.getElementById(parentXMLToolObject.tableId).style.display = 'block';
                 document.getElementById(parentXMLToolObject.tableId).appendChild(data.element);
@@ -1049,14 +1052,18 @@ function initSortablePropertyBox() {
         sort: false
     });
 
-    Sortable.create(RemoveBox, {
-        group: "shared",
-        
-        onAdd: function (evt) {
-          var el = evt.item;
-          el.parentNode.removeChild(el);
-        }
-      });
+    Sortable.create(add_element_by_block, {
+    group: "shared",
+
+    onAdd: function (evt) {
+        var el = evt.item;
+
+        addElementNode('element');
+        el.parentNode.removeChild(el);
+    }
+}); 
+
+    
 }
 // Update property box when items are moved
 function updatePropertyBox(item) {
@@ -1072,26 +1079,29 @@ function updatePropertyBox(item) {
     }
 }
 
-// Modify existing setAndShowPropertyBox function
-function setAndShowPropertyBox(treeView) {
-    const propertyBox = document.getElementById('property-box');
-    while (propertyBox.firstChild) {
-        propertyBox.removeChild(propertyBox.firstChild);
-    }
 
-    const xmlObject = jQuery.data(treeView, attachedXMLToolObjectKey);
-    const xmlElement = jQuery.data(treeView, attachedXMLObjectKey);
-
-    if (xmlObject && xmlElement) {
-        if (xmlObject.valueType === elementType) {
-            propertyBox.appendChild(createElementBox(xmlObject, xmlElement));
-        } else {
-            propertyBox.appendChild(createTextBox(xmlObject, xmlElement));
+function setAndShowPropertyBox(treeView){
+    initSortablePropertyBox();
+    var xmlObject = jQuery.data(treeView,attachedXMLToolObjectKey);
+    var xmlElement = jQuery.data(treeView,attachedXMLObjectKey);
+    if(xmlObject !== null && xmlElement !== null){
+        var propertyBox = document.getElementById(propertyBoxId);
+        if(xmlObject.valueType === elementType){
+            propertyBox.appendChild(elementDiv());
+            jQuery.data(document.getElementById(elementBoxId),attachedXMLToolObjectKey,xmlObject);
+            jQuery.data(document.getElementById(elementBoxId),attachedXMLObjectKey,xmlElement);
+            setElementBoxInitialValues('element-name-mandatory-text',xmlObject,'element-name',
+                'attribute-mandatory-text');
+        }else {
+            propertyBox.appendChild(textDiv());
+            jQuery.data(document.getElementById(textBoxId),attachedXMLToolObjectKey,xmlObject);
+            jQuery.data(document.getElementById(textBoxId),attachedXMLObjectKey,xmlElement);
+            setTextBoxInitialValues('element-value',xmlObject,'value-radio-pcdata','value-radio-cdata');
         }
-        
-        // Re-initialize Sortable after content update
-        initSortablePropertyBox();
+    }else{
+        treeView.style.background = treeViewDivBackground;
     }
+    
 }
 
 // Create element box content
@@ -1152,3 +1162,5 @@ function createTextBox(xmlObject, xmlElement) {
     textBox.appendChild(content);
     return textBox;
 }
+
+
