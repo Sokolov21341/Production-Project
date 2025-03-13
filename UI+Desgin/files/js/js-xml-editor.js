@@ -314,21 +314,36 @@ function checkParseXMLException(xml) {
     return false;
 }
 
-function loadXMLToTool(xmlText){
+function loadXMLToTool(xmlText) {
     clearTool();
-    if(!checkParseXMLException(xmlText)){
+    
+    // Remove XML comments while preserving structure
+    const commentRegex = /<!--[\s\S]*?-->/g;
+    const cleanXmlText = xmlText.replace(commentRegex, '');
+    
+    if (!checkParseXMLException(cleanXmlText)) {
         var parser = new DOMParser();
-        var xmlDocLoad = parser.parseFromString(xmlText,"text/xml");
-        if(xmlDocLoad !== null && xmlDocLoad.firstChild !== null){
+        var xmlDocLoad = parser.parseFromString(cleanXmlText, "text/xml");
+        
+        if (xmlDocLoad !== null && xmlDocLoad.firstChild !== null) {
             xmlDoc = xmlDocLoad;
-            rootElement = new XMLElement(xmlDoc.firstChild.nodeName,rootElementId,rootElementTableId,rootElementImageId,elementType,'');
-            jQuery.data(document.getElementById(rootElementId),attachedXMLToolObjectKey,rootElement);
-            jQuery.data(document.getElementById(rootElementId),attachedXMLObjectKey,xmlDoc.firstChild);
-            getElement(xmlDoc.firstChild,rootElement);
+            rootElement = new XMLElement(xmlDoc.firstChild.nodeName, 
+                rootElementId, 
+                rootElementTableId, 
+                rootElementImageId, 
+                elementType, 
+                ''); 
+            jQuery.data(document.getElementById(rootElementId), 
+                attachedXMLToolObjectKey, 
+                rootElement);        
+            jQuery.data(document.getElementById(rootElementId), 
+                attachedXMLObjectKey, 
+                xmlDoc.firstChild);      
+            getElement(xmlDoc.firstChild, rootElement);       
             var rootDiv = document.getElementById(rootElementId);
             $(rootDiv).html(getFormattedTreeDivName(rootElement.name));
             treeDivOnClick(rootElementId);
-        }else{
+        } else {
             alert(errorParsingXml);
         }
     }
@@ -1014,8 +1029,6 @@ function setFormattedXMLText(){
     var xmlText = document.getElementById('xml-text');
     xmlText.value = vkbeautify.xml(xmlDoc.firstChild.outerHTML,indentation);
 }
-// New code added here
-
 
 // Initialize Sortable
 function initSortablePropertyBox() {
@@ -1065,102 +1078,7 @@ function initSortablePropertyBox() {
 
     
 }
-// Update property box when items are moved
-function updatePropertyBox(item) {
-    const sectionId = item.parentElement.id;
-    const xmlObject = jQuery.data(document.getElementById(treeViewSelectId), attachedXMLToolObjectKey);
-    
-    if (xmlObject) {
-        if (sectionId === 'element-box') {
-            setElementBoxInitialValues('element-name-mandatory-text', xmlObject, 'element-name', 'attribute-mandatory-text');
-        } else {
-            setTextBoxInitialValues('element-value', xmlObject, 'value-radio-pcdata', 'value-radio-cdata');
-        }
-    }
-}
 
-
-function setAndShowPropertyBox(treeView){
-    initSortablePropertyBox();
-    var xmlObject = jQuery.data(treeView,attachedXMLToolObjectKey);
-    var xmlElement = jQuery.data(treeView,attachedXMLObjectKey);
-    if(xmlObject !== null && xmlElement !== null){
-        var propertyBox = document.getElementById(propertyBoxId);
-        if(xmlObject.valueType === elementType){
-            propertyBox.appendChild(elementDiv());
-            jQuery.data(document.getElementById(elementBoxId),attachedXMLToolObjectKey,xmlObject);
-            jQuery.data(document.getElementById(elementBoxId),attachedXMLObjectKey,xmlElement);
-            setElementBoxInitialValues('element-name-mandatory-text',xmlObject,'element-name',
-                'attribute-mandatory-text');
-        }else {
-            propertyBox.appendChild(textDiv());
-            jQuery.data(document.getElementById(textBoxId),attachedXMLToolObjectKey,xmlObject);
-            jQuery.data(document.getElementById(textBoxId),attachedXMLObjectKey,xmlElement);
-            setTextBoxInitialValues('element-value',xmlObject,'value-radio-pcdata','value-radio-cdata');
-        }
-    }else{
-        treeView.style.background = treeViewDivBackground;
-    }
-    
-}
-
-// Create element box content
-function createElementBox(xmlObject, xmlElement) {
-    const elementBox = document.createElement('div');
-    elementBox.id = 'element-box';
-    elementBox.className = 'property-section';
-    
-    const content = document.createElement('div');
-    content.className = 'property-content';
-    
-    // Name property
-    const nameItem = document.createElement('div');
-    nameItem.className = 'property-item';
-    nameItem.innerHTML = `
-        <label>Name:</label>
-        <input type="text" id="element-name" value="${xmlObject.name}" />
-    `;
-    
-    // Attributes property
-    const attributesItem = document.createElement('div');
-    attributesItem.className = 'property-item';
-    attributesItem.innerHTML = `
-        <label>Attributes:</label>
-        <div id="attribute-list"></div>
-    `;
-    
-    content.appendChild(nameItem);
-    content.appendChild(attributesItem);
-    elementBox.appendChild(content);
-    
-    return elementBox;
-}
-
-// Create text box content
-function createTextBox(xmlObject, xmlElement) {
-    const textBox = document.createElement('div');
-    textBox.id = 'text-box';
-    textBox.className = 'property-section';
-    
-    const content = document.createElement('div');
-    content.className = 'property-content';
-    
-    content.innerHTML = `
-        <div class="property-item">
-            <label>Value:</label>
-            <textarea id="element-value">${xmlObject.value}</textarea>
-        </div>
-        <div class="property-item">
-            <label>Type:</label>
-            <select id="value-type">
-                <option value="text" ${xmlObject.valueType === textType ? 'selected' : ''}>Text</option>
-                <option value="cdata" ${xmlObject.valueType === cdataType ? 'selected' : ''}>CDATA</option>
-            </select>
-        </div>
-    `;
-    
-    textBox.appendChild(content);
-    return textBox;
-}
+initSortablePropertyBox();
 
 
