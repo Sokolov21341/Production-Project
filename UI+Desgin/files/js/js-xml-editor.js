@@ -6,7 +6,8 @@ var copyImagePath = 'UI+Desgin/files/images/copy.png';
 var copySelectImagePath = 'UI+Desgin/images/copy-select.png';
 var indentation = 5;
 var counter = 0;
-var add_element_by_block = document.getElementById("add-element-by-block")
+var add_element_by_block = document.getElementById("add-element-by-block");
+var validSenario = false
 
 
 var rootElementId = 'rootElement-div';
@@ -30,7 +31,7 @@ var attachedXMLObjectKey = 'attachedXMLObjectKey';
 var elementBoxId = 'element-box';
 var textBoxId = 'text-box';
 
-var CloudConnectionProblemMessage = "There is some problem in connecting to cloud server, Please try again after some time";
+
 var xmlSavedMessage = "Saved";
 var noneSelectedDeleteMessage = "Please select an element to delete";
 var deleteConfirmMessage = "Are you sure, you want to delete this element. Once deleted can'nt be undone";
@@ -218,14 +219,21 @@ var closeLargeTextOverlayVar = function closeLargeTextOverlay(overlayId){
 }
 
 function saveToDisk() {
-    var element = document.createElement('a');
-    element.setAttribute('href', 'data:application/xml;charset=utf-8,'
-        + encodeURIComponent(document.getElementById('xml-text').value));
-    element.setAttribute('download', document.getElementById("name-of-file").value + ".xml");
-    element.style.display = 'none';
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
+    validateXMLAgainstXSD()
+    if(validSenario == true) {
+     var element = document.createElement('a');
+        element.setAttribute('href', 'data:application/xml;charset=utf-8,'
+            + encodeURIComponent(document.getElementById('xml-text').value));
+        element.setAttribute('download', document.getElementById("name-of-file").value + ".xml");
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    }
+    else {
+        alert("Senario isnt valid: Use Validate check")
+    }
+
 }
 
 function openHelpOverlay(overlayId,outerDivId){
@@ -290,12 +298,15 @@ function load(){
 function loadStartingXml(){
     rootElement = new XMLElement(rootElementName,rootElementId,rootElementTableId,rootElementImageId,elementType,'');
     jQuery.data(document.getElementById(rootElementId),attachedXMLToolObjectKey,rootElement);
-    xmlDoc = (new DOMParser()).parseFromString("<scenario></scenario>","text/xml");
+
+    xmlDoc = (new DOMParser()).parseFromString('<?xml version="1.0"?>\n\n<scenario\nxmlns="http://www.github/cliffe/SecGen/scenario"\nxmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\nxsi:schemaLocation="http://www.github/cliffe/SecGen/scenario">\n</scenario>',"text/xml");
+    
     jQuery.data(document.getElementById(rootElementId),attachedXMLObjectKey,xmlDoc.firstChild);
-    document.getElementById('xml-text').value = '<scenario></scenario>';
+    document.getElementById('xml-text').value = '<?xml version="1.0"?>\n\n<scenario\nxmlns="http://www.github/cliffe/SecGen/scenario"\nxmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\nxsi:schemaLocation="http://www.github/cliffe/SecGen/scenario">\n</scenario>';
     var rootDiv = document.getElementById(rootElementId);
     $(rootDiv).html(getFormattedTreeDivName(rootElementName));
     treeDivOnClick(rootElementId);
+    loadXML()
 }
 
 function checkParseXMLException(xml) {
@@ -1031,7 +1042,6 @@ function setFormattedXMLText(){
 }
 
 const xsdString = `
-           <?xml version="1.0"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            targetNamespace="http://www.github/cliffe/SecGen/scenario"
            xmlns="http://www.github/cliffe/SecGen/scenario"
@@ -1228,8 +1238,35 @@ const xsdString = `
   </xs:complexType>
 
 </xs:schema>
-        `;
+`;
 
+function validateXMLAgainstXSD() {
+    const validationOptions = {
+        xml: document.getElementById('xml-text').value,
+        schema: xsdString
+    };
+
+    try {
+        // Perform validation using xmllint
+        const result = xmllint.validateXML(validationOptions);
+        
+       
+        // Process validation results
+        if (result.errors === null) {
+            validSenario = true
+            alert("XML is Valid")
+        }   
+        else {
+            validSenario = false
+            alert("Error in XML:\n" + result.errors)
+        }
+    
+    } catch (error) {
+      
+    }
+}
+
+    
 // Initialize Sortable
 function initSortablePropertyBox() {
     new Sortable(ExploitList, {

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SecGen Custom Senario Generator</title>
+    <title>SecGen Custom Scenario Generator</title>
     <link rel="stylesheet" href="UI+Desgin/files/css/style-xml-editor.css">
 </head>
 <body class="container-body" onload="load()">
@@ -27,6 +27,7 @@
             <li><a onclick="openHelpOverlay('help-overlay','help-overlay-outer-div')">Help</a></li>
             <li><a onclick='saveToDisk()'>Download</a></li>
             <li><a onclick='newXml()'>New</a></li>
+            <li><a onclick='validateXMLAgainstXSD()'>Validate</a></li>
         </ul>
         <div class='adv'>
            
@@ -137,8 +138,9 @@
 <script type="text/javascript" src="UI+Desgin//files/js/jquery-3.1.1.min.js"></script>
 <script type="text/javascript" src="UI+Desgin/files/js/vkbeautify.js"></script>
 <script src="UI+Desgin/files/js/Sortable.js" type="text/javascript"></script>
-<script src="UI+Desgin/files/js/" type="text/javascript"></script>
+<script src="UI+Desgin/files/js/xmllint.js" type="text/javascript"></script>
 <script src="UI+Desgin/files/js/js-xml-editor.js" type="text/javascript"></script>
+
 
 
 </html>
