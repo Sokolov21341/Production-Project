@@ -840,6 +840,10 @@ function addElementNode(type){
                 xmlElement = new XMLElement('','','','',textType,'New Text Node');
                 data = createElementDiv(xmlElement);
             }
+            else if(type === 'system'){
+                xmlElement = new XMLElement('system','','','',elementType,'');
+                data = createElementDiv(xmlElement); 
+            }
            
             if(xmlElement !== null && data !== null){
                 document.getElementById(parentXMLToolObject.tableId).style.display = 'block';
@@ -1285,11 +1289,18 @@ function initSortablePropertyBox() {
         group: {
             filter: '.Header',
             name: 'shared',
-            pull: 'clone', // To clone: set pull to 'clone'
+            pull: 'clone',
             put: false,
         },
         animation: 150,
-        sort: false
+        sort: false,
+
+        onClone: function (evt) {
+            var origEl = evt.item;
+            var cloneEl = evt.clone;
+            // Copy the ID from original to clone
+            cloneEl.id = origEl.id;
+        }    
     });
     
     new Sortable(VM, {
@@ -1300,7 +1311,14 @@ function initSortablePropertyBox() {
             put: false,
         },
         animation: 150,
-        sort: false
+        sort: false,
+
+        onClone: function (evt) {
+            var origEl = evt.item;
+            var cloneEl = evt.clone;
+            // Copy the ID from original to clone
+            cloneEl.id = origEl.id;
+        }    
     });
     
     new Sortable(Generator, {
@@ -1311,7 +1329,14 @@ function initSortablePropertyBox() {
             put: false,
         },
         animation: 150,
-        sort: false
+        sort: false,
+
+        onClone: function (evt) {
+            var origEl = evt.item;
+            var cloneEl = evt.clone;
+            // Copy the ID from original to clone
+            cloneEl.id = origEl.id;
+        }    
     });
 
     Sortable.create(add_element_by_block, {
@@ -1322,15 +1347,15 @@ function initSortablePropertyBox() {
         
         if(el.id == 'System') {
 
-            createSystem(el)
+            createSystem()
         }
         else if(el.id == 'generator') {
 
-            createGenerator(el)
+            createGenerator()
         }
         else if(el.id == 'vulnerability') {
 
-            createVulnerability(el)
+            createVulnerability()
         }
         else {
             addElementNode('element');
@@ -1342,18 +1367,67 @@ function initSortablePropertyBox() {
 });  
 }
 
-function createVulnerability(el) {
+function createVulnerability() {
+
+    var vulnerabilityElement = new XMLElement('vulnerability','','','',
+        elementType,'');
+    vulnerabilityElement.attributes = [
+        new XMLAttribute('module_path', '')
+    ];
     
+    var data = createElementDiv(vulnerabilityElement);
+    document.getElementById(rootElementTableId).appendChild(data.element);
+    document.getElementById(rootElementTableId).appendChild(data.table);
+    document.getElementById(rootElementImageId).style.visibility = 'visible';
+    rootElement.childs.push(vulnerabilityElement);
+    xmlDoc.firstChild.appendChild(data.docElement);
+    setFormattedXMLText();
+    treeDivOnClick(data.id);
+    setXmlElementValue('element-name','element-name-mandatory-text')
 }
 
-function createSystem(el) {
+function createSystem() {
+    
 
+    addElementNode('system');
+   
+    // Then set its attributes and children
+    systemElement = jQuery.data(document.getElementById(treeViewSelectId), attachedXMLToolObjectKey);
+    var xmlElement = jQuery.data(document.getElementById(treeViewSelectId), attachedXMLObjectKey);
+
+    // Set system_name child
+    var systemName = xmlDoc.createElement('system_name');
+    systemName.textContent = 'Name';
+    xmlElement.appendChild(systemName);
+
+    // Set base child with platform attribute
+    var base = xmlDoc.createElement('base');
+    base.setAttribute('module_path', ' ');
+    xmlElement.appendChild(base);
+
+    // Update the display
+    setFormattedXMLText();
+    loadXML()
 }
+    
 
-function createGenerator(el) {
 
+function createGenerator() {
+
+    var generatorElement = new XMLElement('generator','','','',
+        elementType,'');
+    generatorElement.attributes = [
+        new XMLAttribute('type', '')
+    ];
+    
+    var data = createElementDiv(generatorElement);
+    document.getElementById(rootElementTableId).appendChild(data.element);
+    document.getElementById(rootElementTableId).appendChild(data.table);
+    document.getElementById(rootElementImageId).style.visibility = 'visible';
+    rootElement.childs.push(generatorElement);
+    xmlDoc.firstChild.appendChild(data.docElement);
+    setFormattedXMLText();
+    treeDivOnClick(data.id);
+    setXmlElementValue('element-name','element-name-mandatory-text')
 }
-
-
-
 
