@@ -24,3 +24,5 @@ Sprint 6 DUE: TBA
 SortableJS/Sortable: https://github.com/SortableJS/Sortable
 
 web-xml-editor: https://github.com/lalitbhagtani/web-xml-editor
+
+xsd validator: https://github.com/kripken/xml.js
