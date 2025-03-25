@@ -10,6 +10,7 @@ var add_element_by_block = document.getElementById("add-element-by-block");
 var validSenario = false
 
 
+
 var rootElementId = 'rootElement-div';
 var rootElementName = 'scenario';
 var rootElementTableId = 'rootElement-div-table';
@@ -294,19 +295,25 @@ function minifyXML(){
 function load(){
     loadStartingXml();
 }
-
+ 
 function loadStartingXml(){
     rootElement = new XMLElement(rootElementName,rootElementId,rootElementTableId,rootElementImageId,elementType,'');
-    jQuery.data(document.getElementById(rootElementId),attachedXMLToolObjectKey,rootElement);
-
-    xmlDoc = (new DOMParser()).parseFromString('<?xml version="1.0"?>\n\n<scenario\nxmlns="http://www.github/cliffe/SecGen/scenario"\nxmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\nxsi:schemaLocation="http://www.github/cliffe/SecGen/scenario">\n</scenario>',"text/xml");
+    rootElement.attributes = [
+        new XMLAttribute('xmlns', "http://www.github/cliffe/SecGen/scenario"),
+        new XMLAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance"),
+        new XMLAttribute('xsi:schemaLocation', "http://www.github/cliffe/SecGen/scenario")
+    ];
     
+    xmlDoc = (new DOMParser()).parseFromString('<scenario></scenario>',"text/xml");
+    jQuery.data(document.getElementById(rootElementId),attachedXMLToolObjectKey,rootElement);
     jQuery.data(document.getElementById(rootElementId),attachedXMLObjectKey,xmlDoc.firstChild);
-    document.getElementById('xml-text').value = '<?xml version="1.0"?>\n\n<scenario\nxmlns="http://www.github/cliffe/SecGen/scenario"\nxmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\nxsi:schemaLocation="http://www.github/cliffe/SecGen/scenario">\n</scenario>';
+    
+    document.getElementById('xml-text').value = '<scenario></scenario>'
     var rootDiv = document.getElementById(rootElementId);
     $(rootDiv).html(getFormattedTreeDivName(rootElementName));
     treeDivOnClick(rootElementId);
-    loadXML()
+
+    setXmlElementValue('element-name','element-name-mandatory-text')
 }
 
 function checkParseXMLException(xml) {
@@ -328,9 +335,9 @@ function checkParseXMLException(xml) {
 function loadXMLToTool(xmlText) {
     clearTool();
     
-    // Remove XML comments while preserving structure
+    // Remove XML comments
     const commentRegex = /<!--[\s\S]*?-->/g;
-    const cleanXmlText = xmlText.replace(commentRegex, '');
+    var cleanXmlText = xmlText.replace(commentRegex, '');
     
     if (!checkParseXMLException(cleanXmlText)) {
         var parser = new DOMParser();
@@ -824,6 +831,7 @@ function addElementNode(type){
             if(type === 'element'){
                 xmlElement = new XMLElement('New_Element','','','',elementType,'');
                 data = createElementDiv(xmlElement);
+
             }else if(type === 'text'){
                 xmlElement = new XMLElement('','','','',textType,'New Text Node');
                 data = createElementDiv(xmlElement);
@@ -839,6 +847,7 @@ function addElementNode(type){
                 parentXMLObject.appendChild(data.docElement);
                 setFormattedXMLText();
                 treeDivOnClick(data.id);
+
             }
         }else{
             alert(textNodeInElementNodeMessage);
@@ -1246,24 +1255,22 @@ function validateXMLAgainstXSD() {
         schema: xsdString
     };
 
-    try {
+    
         // Perform validation using xmllint
-        const result = xmllint.validateXML(validationOptions);
-        
-       
-        // Process validation results
+        var result = xmllint.validateXML(validationOptions);
+
+        // Process validation results   
         if (result.errors === null) {
             validSenario = true
             alert("XML is Valid")
         }   
         else {
             validSenario = false
-            alert("Error in XML:\n" + result.errors)
+            let error = String(result.errors)
+            error = error.replace(/file_\d+\.xml:\d+: /, '').replace(/\{http:\/\/www\.github\/cliffe\/SecGen\/scenario\}/g, '')
+            alert("Error in XML:\n" + error)
         }
     
-    } catch (error) {
-      
-    }
 }
 
     
@@ -1317,5 +1324,7 @@ function initSortablePropertyBox() {
 }
 
 initSortablePropertyBox();
+
+
 
 
