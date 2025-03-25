@@ -8,7 +8,7 @@ var indentation = 5;
 var counter = 0;
 var add_element_by_block = document.getElementById("add-element-by-block");
 var validSenario = false
-
+initSortablePropertyBox();
 
 
 var rootElementId = 'rootElement-div';
@@ -222,9 +222,13 @@ var closeLargeTextOverlayVar = function closeLargeTextOverlay(overlayId){
 function saveToDisk() {
     validateXMLAgainstXSD()
     if(validSenario == true) {
-     var element = document.createElement('a');
-        element.setAttribute('href', 'data:application/xml;charset=utf-8,'
-            + encodeURIComponent(document.getElementById('xml-text').value));
+     var element = document.createElement('a'); 
+     if(document.getElementById('xml-text').value.includes('<?xml version="1.0"?>')) {  
+        element.setAttribute('href', 'data:application/xml;charset=utf-8,' + encodeURIComponent(document.getElementById('xml-text').value));
+     } 
+     else {
+        element.setAttribute('href', 'data:application/xml;charset=utf-8,' + encodeURIComponent('<?xml version="1.0"?>\n' + document.getElementById('xml-text').value));
+     }      
         element.setAttribute('download', document.getElementById("name-of-file").value + ".xml");
         element.style.display = 'none';
         document.body.appendChild(element);
@@ -301,7 +305,7 @@ function loadStartingXml(){
     rootElement.attributes = [
         new XMLAttribute('xmlns', "http://www.github/cliffe/SecGen/scenario"),
         new XMLAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance"),
-        new XMLAttribute('xsi:schemaLocation', "http://www.github/cliffe/SecGen/scenario")
+        new XMLAttribute('xsi:schemaLocation', "http://www.github/cliffe/SecGen/scenario"),
     ];
     
     xmlDoc = (new DOMParser()).parseFromString('<scenario></scenario>',"text/xml");
@@ -830,7 +834,7 @@ function addElementNode(type){
             var data = null;
             if(type === 'element'){
                 xmlElement = new XMLElement('New_Element','','','',elementType,'');
-                data = createElementDiv(xmlElement);
+                data = createElementDiv(xmlElement);   
 
             }else if(type === 'text'){
                 xmlElement = new XMLElement('','','','',textType,'New Text Node');
@@ -852,6 +856,7 @@ function addElementNode(type){
         }else{
             alert(textNodeInElementNodeMessage);
         }
+
     }
 }
 
@@ -1050,7 +1055,7 @@ function setFormattedXMLText(){
     xmlText.value = vkbeautify.xml(xmlDoc.firstChild.outerHTML,indentation);
 }
 
-const xsdString = `
+const XSDSTRING = `
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            targetNamespace="http://www.github/cliffe/SecGen/scenario"
            xmlns="http://www.github/cliffe/SecGen/scenario"
@@ -1252,7 +1257,7 @@ const xsdString = `
 function validateXMLAgainstXSD() {
     const validationOptions = {
         xml: document.getElementById('xml-text').value,
-        schema: xsdString
+        schema: XSDSTRING
     };
 
     
@@ -1314,16 +1319,40 @@ function initSortablePropertyBox() {
 
     onAdd: function (evt) {
         var el = evt.item;
+        
+        if(el.id == 'System') {
 
-        addElementNode('element');
+            createSystem(el)
+        }
+        else if(el.id == 'generator') {
+
+            createGenerator(el)
+        }
+        else if(el.id == 'vulnerability') {
+
+            createVulnerability(el)
+        }
+        else {
+            addElementNode('element');
+        }
+
+        
         el.parentNode.removeChild(el);
     }
-}); 
+});  
+}
 
+function createVulnerability(el) {
     
 }
 
-initSortablePropertyBox();
+function createSystem(el) {
+
+}
+
+function createGenerator(el) {
+
+}
 
 
 
