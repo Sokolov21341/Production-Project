@@ -17,7 +17,64 @@
                 alt="Close" onclick="closeHelpOverlay('help-overlay','help-overlay-outer-div')" />
         </div>
         <div class="help-text">
-            <strong>This is a project that took a while ;D</strong>
+
+            <h2>Add Element :-</h2>
+            <p>To add new element, first select the element node under which you like to add new element,
+            then click the Add Element icon on a right side of the bar,
+            once you click this icon, new element will be added to the selected node.</p>
+
+            <h2>Add Text :-</h2>
+            <p>To add new text, first select the element node under which you like to add new text,
+            then click the Add Text icon on the right side of the bar,
+            once you click this icon, new text will be added to the selected node.</p>
+
+            <h2>Tree View :-</h2>
+            <p>Tree view will show your working xml in a hierarchical model, you can select any node in the model to view or edit it's value.
+            It can be expanded by clicking expand image button on a right hand side of bar.</p>
+
+            <h2>Text View :-</h2>
+            <p>Text view is like a code editor, this will show your working xml in the text format.
+            You can edit your work in the code editor and can also load this to xml editor ( xml viewer ) by clicking load image button.
+            It can be expanded by clicking expand image button on a right hand side of the bar.</p>
+
+            <h1>Scenario Help</h1>
+            <br>
+            <h2><strong>SCENARIO</strong></h2>
+            <p><strong>Attribute | Required | Description | Values</strong></p>
+            <p><br />xmlns | required | Defines XML namespace for SecGen scenarios | http://www.github/cliffe/SecGen/scenario</p>
+            <p><br />xmlns:xsi | required | Specifies XSI namespace | http://www.w3.org/2001/XMLSchema-instance</p>
+            <p><br />xsi:schemaLocation | required | Points to schema definition | http://www.github/cliffe/SecGen/scenario</p>
+            
+            <h2><strong>SYSTEM</strong></h2>
+            <p><strong>Attribute | Required | Description | Values</strong></p>
+            <p><br />system_name | required | Name for Virtual Machine | (e.g., "storage_server")</p>
+
+            <h2><strong>BASE</strong></h2>
+            <p><strong>Attribute | Required | Description | Values</strong></p>
+            <p><br />module_path | Either | base system module path | (e.g., "modules/bases/debian_puppet_32")</p>
+            <p><br />platform | Either | Specifies Operating System  | (e.g., "linux", "windows")</p>
+        
+            <h2><strong>VULNERABILITY&nbsp;</strong></h2>
+            <p><strong>Attribute | Required | Description | Values</strong></p>
+            <p><br />access | Optional | Specifies attack vector | remote, local</p>
+            <p><br />module_path | Optional | vulnerability module path | e.g., module/vulnerabilites/* </p>
+            <p><br />privilege | Optional | Defines access level gained | info_leak, root_rwx, user_rwx </p>
+            
+            <h2><strong>NETWORK</strong></h2>
+            <p><strong>Attribute | Required | Description | Values</strong></p>
+            <p><br />range | required | IP allocation method | (e.g., "dhcp")</p>
+            <p><br />type | required | Defines network connectivity | (e.g., "private_network")</p>
+
+            <h2>OTHER</h2>
+            <p><strong>Element | Attribute | Required | Description | Values</strong></p>
+            <p><br />Datastore into_datastore&nbsp;required Storage identifier String (e.g., "flags")</p>
+            <p><br />Generator type&nbsp;required Type of data generator String (e.g., "flag_generator")</p>
+            <p><br />Input into&nbsp;required Parameter destination String (e.g., "strings_to_encode")</p>
+
+            <br>
+            <p>More info:
+            <a title="Creating-Scenarios" href="https://github.com/cliffe/SecGen/blob/master/README-Creating-Scenarios.md">Creating-Scenarios</a>, 
+            <a title="Schema" href="https://github.com/cliffe/SecGen/blob/master/lib/schemas/scenario_schema.xsd">Schema</a></p>
         </div>
     </div>
 </div>
